@@ -4,7 +4,7 @@ extends StaticBody2D
 @onready var fsm = $FSM
 @onready var hl = $Highlight
 @onready var hbox_col = $Hitbox/CollisionShape2D
-@onready var wood_res = preload("res://scenes/resources/tree/wood.tscn")
+@onready var wood_res = preload("res://scenes/resources/tree/pickable_wood.tscn")
 
 var hp = 2
 

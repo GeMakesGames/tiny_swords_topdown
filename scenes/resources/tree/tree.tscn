@@ -1,0 +1,138 @@
+[gd_scene load_steps=21 format=3 uid="uid://doi2w4w5wmcge"]
+
+[ext_resource type="Script" path="res://scripts/resources/tree/tree.gd" id="1_ohsj6"]
+[ext_resource type="Texture2D" uid="uid://diwjma8nthbfn" path="res://assets/resources/tree/tree.png" id="2_ect0y"]
+[ext_resource type="Script" path="res://scripts/fsm/fsm.gd" id="3_ffjxj"]
+[ext_resource type="Script" path="res://scripts/resources/tree/states/tree_idle_state.gd" id="4_03j2j"]
+[ext_resource type="Script" path="res://scripts/resources/tree/states/tree_hit_state.gd" id="5_278un"]
+[ext_resource type="Script" path="res://scripts/resources/tree/states/tree_cut_state.gd" id="6_k816q"]
+[ext_resource type="Texture2D" uid="uid://bmg5qh02np4es" path="res://assets/UI/pointers/03.png" id="7_5nv4d"]
+[ext_resource type="Texture2D" uid="uid://7v5nab3n2g0j" path="res://assets/UI/pointers/04.png" id="8_daub4"]
+[ext_resource type="Texture2D" uid="uid://kpyombutu2ie" path="res://assets/UI/pointers/05.png" id="9_ajb56"]
+[ext_resource type="Texture2D" uid="uid://bh1n6h7is6oy6" path="res://assets/UI/pointers/06.png" id="10_1jybi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xoqkl"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(0, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pjup0"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(0, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rfejb"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(192, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfixb"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f4i0g"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nlmsd"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3emt1"]
+atlas = ExtResource("2_ect0y")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gvcyc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xoqkl")
+}],
+"loop": false,
+"name": &"cut",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pjup0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rfejb")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jfixb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f4i0g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nlmsd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3emt1")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qf1rn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qkcje"]
+size = Vector2(67, 161)
+
+[node name="Tree" type="StaticBody2D"]
+script = ExtResource("1_ohsj6")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_gvcyc")
+animation = &"idle"
+frame_progress = 0.989859
+offset = Vector2(0, -70)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_qf1rn")
+
+[node name="FSM" type="Node" parent="."]
+script = ExtResource("3_ffjxj")
+
+[node name="Idle" type="Node" parent="FSM"]
+script = ExtResource("4_03j2j")
+
+[node name="Hit" type="Node" parent="FSM"]
+script = ExtResource("5_278un")
+
+[node name="Cut" type="Node" parent="FSM"]
+script = ExtResource("6_k816q")
+
+[node name="Hitbox" type="Area2D" parent="."]
+visible = false
+collision_layer = 256
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(1, -74.5)
+shape = SubResource("RectangleShape2D_qkcje")
+
+[node name="Highlight" type="Node2D" parent="."]
+visible = false
+
+[node name="03" type="Sprite2D" parent="Highlight"]
+position = Vector2(-45, -131)
+texture = ExtResource("7_5nv4d")
+
+[node name="04" type="Sprite2D" parent="Highlight"]
+position = Vector2(45, -131)
+texture = ExtResource("8_daub4")
+
+[node name="05" type="Sprite2D" parent="Highlight"]
+position = Vector2(-45, 0)
+texture = ExtResource("9_ajb56")
+
+[node name="06" type="Sprite2D" parent="Highlight"]
+position = Vector2(45, 0)
+texture = ExtResource("10_1jybi")

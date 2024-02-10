@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://cspk13sghs8q7"]
+
+[ext_resource type="Script" path="res://scripts/resources/pickable_resource.gd" id="1_yhicb"]
+[ext_resource type="Texture2D" uid="uid://bmg5qh02np4es" path="res://assets/UI/pointers/03.png" id="2_7pj01"]
+[ext_resource type="Texture2D" uid="uid://7v5nab3n2g0j" path="res://assets/UI/pointers/04.png" id="3_m4ikf"]
+[ext_resource type="Texture2D" uid="uid://kpyombutu2ie" path="res://assets/UI/pointers/05.png" id="4_oul4p"]
+[ext_resource type="Texture2D" uid="uid://bh1n6h7is6oy6" path="res://assets/UI/pointers/06.png" id="5_jbov8"]
+
+[node name="PickableResource" type="Area2D"]
+collision_layer = 512
+collision_mask = 0
+script = ExtResource("1_yhicb")
+metadata/_edit_group_ = true
+
+[node name="Highlight" type="Node2D" parent="."]
+
+[node name="03" type="Sprite2D" parent="Highlight"]
+position = Vector2(-30, -30)
+texture = ExtResource("2_7pj01")
+
+[node name="04" type="Sprite2D" parent="Highlight"]
+position = Vector2(35, -30)
+texture = ExtResource("3_m4ikf")
+
+[node name="05" type="Sprite2D" parent="Highlight"]
+position = Vector2(-30, 12)
+texture = ExtResource("4_oul4p")
+
+[node name="06" type="Sprite2D" parent="Highlight"]
+position = Vector2(35, 12)
+texture = ExtResource("5_jbov8")
+
+[node name="SpriteContainer" type="Node2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+
+[node name="StackArea" type="Area2D" parent="."]
+collision_layer = 1024
+collision_mask = 1024
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StackArea"]
+visible = false
+
+[connection signal="area_entered" from="StackArea" to="." method="_on_stack_area_area_entered"]

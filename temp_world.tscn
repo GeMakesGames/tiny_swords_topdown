@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://diyro04wwkeql"]
+[gd_scene load_steps=75 format=3 uid="uid://diyro04wwkeql"]
 
 [ext_resource type="Texture2D" uid="uid://b5ql6emxa5pa3" path="res://assets/terrain/ground/tilemap_elevation.png" id="1_5dw0k"]
 [ext_resource type="Texture2D" uid="uid://bap5dr001bpeb" path="res://assets/terrain/ground/tilemap_flat.png" id="2_j600u"]
@@ -14,15 +14,16 @@
 [ext_resource type="Script" path="res://scripts/character/pawn/states/pawn_idle_state.gd" id="12_1roln"]
 [ext_resource type="Script" path="res://scripts/character/pawn/states/pawn_run_state.gd" id="13_6rvqy"]
 [ext_resource type="Script" path="res://scripts/character/pawn/states/pawn_chop_state.gd" id="14_b6jvk"]
-[ext_resource type="Texture2D" uid="uid://diwjma8nthbfn" path="res://assets/resources/tree/tree.png" id="15_l4oak"]
-[ext_resource type="Script" path="res://scripts/resources/tree/tree.gd" id="15_v84dc"]
-[ext_resource type="Script" path="res://scripts/resources/tree/states/tree_idle_state.gd" id="17_tp5gh"]
-[ext_resource type="Script" path="res://scripts/resources/tree/states/tree_hit_state.gd" id="18_m7y61"]
-[ext_resource type="Texture2D" uid="uid://bmg5qh02np4es" path="res://assets/UI/pointers/03.png" id="18_woqyc"]
-[ext_resource type="Texture2D" uid="uid://7v5nab3n2g0j" path="res://assets/UI/pointers/04.png" id="19_l5rb7"]
-[ext_resource type="Script" path="res://scripts/resources/tree/states/tree_cut_state.gd" id="19_twt1c"]
-[ext_resource type="Texture2D" uid="uid://kpyombutu2ie" path="res://assets/UI/pointers/05.png" id="20_pc6ku"]
-[ext_resource type="Texture2D" uid="uid://bh1n6h7is6oy6" path="res://assets/UI/pointers/06.png" id="21_kmg13"]
+[ext_resource type="PackedScene" uid="uid://doi2w4w5wmcge" path="res://scenes/resources/tree/tree.tscn" id="16_nn425"]
+[ext_resource type="Script" path="res://scripts/buildings/house/house.gd" id="17_ai4ws"]
+[ext_resource type="Texture2D" uid="uid://d11xf45i4w3ch" path="res://assets/buildings/house/house_construction.png" id="18_6qubx"]
+[ext_resource type="Script" path="res://scripts/buildings/house/states/house_destroyed_state.gd" id="19_6c4kr"]
+[ext_resource type="Texture2D" uid="uid://bmg5qh02np4es" path="res://assets/UI/pointers/03.png" id="20_c8rc5"]
+[ext_resource type="Texture2D" uid="uid://7v5nab3n2g0j" path="res://assets/UI/pointers/04.png" id="21_23pdt"]
+[ext_resource type="Texture2D" uid="uid://kpyombutu2ie" path="res://assets/UI/pointers/05.png" id="22_blu68"]
+[ext_resource type="PackedScene" uid="uid://bsb0ek0mble5" path="res://scenes/resources/tree/pickable_wood.tscn" id="23_22ig1"]
+[ext_resource type="Texture2D" uid="uid://bh1n6h7is6oy6" path="res://assets/UI/pointers/06.png" id="23_x058m"]
+[ext_resource type="PackedScene" uid="uid://bc7c8clpmpsfs" path="res://scenes/resources/mine/pickable_gold.tscn" id="24_2lobm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tpbys"]
 texture = ExtResource("1_5dw0k")
@@ -732,77 +733,8 @@ size = Vector2(122, 52)
 [sub_resource type="CircleShape2D" id="CircleShape2D_uk7uo"]
 radius = 31.0161
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xoqkl"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(0, 384, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pjup0"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(0, 192, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_rfejb"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(192, 192, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_jfixb"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(0, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_f4i0g"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(192, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_nlmsd"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(384, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3emt1"]
-atlas = ExtResource("15_l4oak")
-region = Rect2(576, 0, 192, 192)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_gvcyc"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xoqkl")
-}],
-"loop": false,
-"name": &"cut",
-"speed": 1.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_pjup0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_rfejb")
-}],
-"loop": false,
-"name": &"hit",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_jfixb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_f4i0g")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nlmsd")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3emt1")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 10.0
-}]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_qf1rn"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qkcje"]
-size = Vector2(67, 161)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nl67u"]
+size = Vector2(82, 78)
 
 [node name="TempWorld" type="Node2D"]
 y_sort_enabled = true
@@ -824,15 +756,16 @@ layer_5/name = "4"
 layer_5/tile_data = PackedInt32Array()
 
 [node name="Pawn" type="CharacterBody2D" parent="."]
-position = Vector2(677, 327)
+position = Vector2(478, 387)
 script = ExtResource("9_vhw5p")
 metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Pawn"]
 position = Vector2(0, 1)
 sprite_frames = SubResource("SpriteFrames_x6ds1")
-animation = &"carry_idle"
+animation = &"idle"
 autoplay = "idle"
+frame_progress = 0.0278916
 offset = Vector2(0, -26)
 
 [node name="FSM" type="Node" parent="Pawn"]
@@ -871,74 +804,67 @@ collision_mask = 512
 position = Vector2(0, -16)
 shape = SubResource("CircleShape2D_uk7uo")
 
-[node name="WoodCarryContainer" type="Node2D" parent="Pawn"]
-position = Vector2(-2, -36)
+[node name="CarryContainer" type="Node2D" parent="Pawn"]
+position = Vector2(-2, -48)
 
-[node name="Slot1" type="Marker2D" parent="Pawn/WoodCarryContainer"]
-visible = false
+[node name="Tree" parent="." instance=ExtResource("16_nn425")]
+position = Vector2(855, 280)
 
-[node name="Slot2" type="Marker2D" parent="Pawn/WoodCarryContainer"]
-visible = false
-position = Vector2(7, 7)
-
-[node name="Slot3" type="Marker2D" parent="Pawn/WoodCarryContainer"]
-visible = false
-position = Vector2(5, -4)
-
-[node name="Tree" type="StaticBody2D" parent="."]
-position = Vector2(782, 322)
-script = ExtResource("15_v84dc")
+[node name="House" type="StaticBody2D" parent="."]
+position = Vector2(650, 288)
+script = ExtResource("17_ai4ws")
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Tree"]
-sprite_frames = SubResource("SpriteFrames_gvcyc")
-animation = &"idle"
-frame_progress = 0.989859
-offset = Vector2(0, -70)
+[node name="Sprite2D" type="Sprite2D" parent="House"]
+texture = ExtResource("18_6qubx")
+offset = Vector2(0, -50)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Tree"]
-visible = false
-shape = SubResource("CircleShape2D_qf1rn")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="House"]
+position = Vector2(0, -21)
+shape = SubResource("RectangleShape2D_nl67u")
 
-[node name="FSM" type="Node" parent="Tree"]
+[node name="FSM" type="Node" parent="House"]
 script = ExtResource("11_bhewf")
 
-[node name="Idle" type="Node" parent="Tree/FSM"]
-script = ExtResource("17_tp5gh")
+[node name="Destroyed" type="Node" parent="House/FSM"]
+script = ExtResource("19_6c4kr")
 
-[node name="Hit" type="Node" parent="Tree/FSM"]
-script = ExtResource("18_m7y61")
-
-[node name="Cut" type="Node" parent="Tree/FSM"]
-script = ExtResource("19_twt1c")
-
-[node name="Hitbox" type="Area2D" parent="Tree"]
-visible = false
-collision_layer = 256
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Tree/Hitbox"]
-position = Vector2(1, -74.5)
-shape = SubResource("RectangleShape2D_qkcje")
-
-[node name="Highlight" type="Node2D" parent="Tree"]
+[node name="Highlight" type="Node2D" parent="House"]
 visible = false
 
-[node name="03" type="Sprite2D" parent="Tree/Highlight"]
-position = Vector2(-45, -131)
-texture = ExtResource("18_woqyc")
+[node name="03" type="Sprite2D" parent="House/Highlight"]
+position = Vector2(-50, -60)
+texture = ExtResource("20_c8rc5")
 
-[node name="04" type="Sprite2D" parent="Tree/Highlight"]
-position = Vector2(45, -131)
-texture = ExtResource("19_l5rb7")
+[node name="04" type="Sprite2D" parent="House/Highlight"]
+position = Vector2(50, -60)
+texture = ExtResource("21_23pdt")
 
-[node name="05" type="Sprite2D" parent="Tree/Highlight"]
-position = Vector2(-45, 0)
-texture = ExtResource("20_pc6ku")
+[node name="05" type="Sprite2D" parent="House/Highlight"]
+position = Vector2(-50, 25)
+texture = ExtResource("22_blu68")
 
-[node name="06" type="Sprite2D" parent="Tree/Highlight"]
-position = Vector2(45, 0)
-texture = ExtResource("21_kmg13")
+[node name="06" type="Sprite2D" parent="House/Highlight"]
+position = Vector2(50, 25)
+texture = ExtResource("23_x058m")
+
+[node name="PickableWood" parent="." instance=ExtResource("23_22ig1")]
+position = Vector2(502, 414)
+
+[node name="PickableWood2" parent="." instance=ExtResource("23_22ig1")]
+position = Vector2(583, 429)
+
+[node name="PickableWood3" parent="." instance=ExtResource("23_22ig1")]
+position = Vector2(384, 419)
+
+[node name="PickableResource" parent="." instance=ExtResource("24_2lobm")]
+position = Vector2(419, 222)
+
+[node name="PickableResource2" parent="." instance=ExtResource("24_2lobm")]
+position = Vector2(328, 311)
+
+[node name="PickableResource3" parent="." instance=ExtResource("24_2lobm")]
+position = Vector2(536, 249)
 
 [connection signal="area_entered" from="Pawn/ChopArea" to="Pawn" method="_on_chop_area_area_entered"]
 [connection signal="area_exited" from="Pawn/ChopArea" to="Pawn" method="_on_chop_area_area_exited"]

@@ -1,0 +1,122 @@
+[gd_scene load_steps=15 format=3 uid="uid://bsb0ek0mble5"]
+
+[ext_resource type="PackedScene" uid="uid://cspk13sghs8q7" path="res://scenes/resources/pickable_resource.tscn" id="1_coryl"]
+[ext_resource type="Texture2D" uid="uid://c5vt5olhdn8rp" path="res://assets/resources/tree/w_idle.png" id="2_724kv"]
+[ext_resource type="Texture2D" uid="uid://dgwogthwtrqkf" path="res://assets/resources/tree/w_idle_no_shadow.png" id="3_ghqrm"]
+[ext_resource type="Texture2D" uid="uid://16ejs8mpcctl" path="res://assets/resources/tree/w_spawn.png" id="4_wjtep"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jrbxr"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_33pfb"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wrcq1"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y16qy"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4jeju"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ykloy"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i38dj"]
+atlas = ExtResource("4_wjtep")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yi8ff"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_724kv")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_ghqrm")
+}],
+"loop": false,
+"name": &"pick_up",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jrbxr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_33pfb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wrcq1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y16qy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4jeju")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ykloy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i38dj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_724kv")
+}],
+"loop": false,
+"name": &"spawn",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_j1ydc"]
+size = Vector2(68, 39)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sy4ci"]
+radius = 35.0143
+
+[node name="PickableWood" instance=ExtResource("1_coryl")]
+type = 0
+
+[node name="Highlight" parent="." index="0"]
+visible = false
+
+[node name="S1" type="AnimatedSprite2D" parent="SpriteContainer" index="0"]
+position = Vector2(0, -18)
+sprite_frames = SubResource("SpriteFrames_yi8ff")
+animation = &"idle"
+offset = Vector2(0, -10)
+
+[node name="S2" type="AnimatedSprite2D" parent="SpriteContainer" index="1"]
+visible = false
+position = Vector2(11, -14)
+sprite_frames = SubResource("SpriteFrames_yi8ff")
+animation = &"idle"
+offset = Vector2(0, -10)
+
+[node name="S3" type="AnimatedSprite2D" parent="SpriteContainer" index="2"]
+visible = false
+position = Vector2(6, -27)
+sprite_frames = SubResource("SpriteFrames_yi8ff")
+animation = &"pick_up"
+offset = Vector2(0, -10)
+
+[node name="CollisionShape2D" parent="." index="2"]
+position = Vector2(3, -9.5)
+shape = SubResource("RectangleShape2D_j1ydc")
+
+[node name="CollisionShape2D" parent="StackArea" index="0"]
+position = Vector2(3, -9)
+shape = SubResource("CircleShape2D_sy4ci")

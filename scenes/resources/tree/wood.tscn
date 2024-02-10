@@ -1,8 +1,88 @@
-[gd_scene load_steps=13 format=3 uid="uid://dinmyq4a1mii0"]
+[gd_scene load_steps=19 format=3 uid="uid://d1ldmunw1vyiy"]
 
 [ext_resource type="Texture2D" uid="uid://16ejs8mpcctl" path="res://assets/resources/tree/w_spawn.png" id="1_henmv"]
-[ext_resource type="Script" path="res://scripts/resources/tree/wood.gd" id="1_w66i6"]
+[ext_resource type="Texture2D" uid="uid://dgwogthwtrqkf" path="res://assets/resources/tree/w_idle_no_shadow.png" id="2_eeyli"]
 [ext_resource type="Texture2D" uid="uid://c5vt5olhdn8rp" path="res://assets/resources/tree/w_idle.png" id="3_elndr"]
+[ext_resource type="Texture2D" uid="uid://bmg5qh02np4es" path="res://assets/UI/pointers/03.png" id="5_p8k0q"]
+[ext_resource type="Texture2D" uid="uid://7v5nab3n2g0j" path="res://assets/UI/pointers/04.png" id="6_ayu52"]
+[ext_resource type="Texture2D" uid="uid://kpyombutu2ie" path="res://assets/UI/pointers/05.png" id="7_udhdr"]
+[ext_resource type="Texture2D" uid="uid://bh1n6h7is6oy6" path="res://assets/UI/pointers/06.png" id="8_7nwnw"]
+
+[sub_resource type="GDScript" id="GDScript_gpkyj"]
+script/source = "extends Area2D
+class_name Wood
+
+@onready var col = $CollisionShape2D 
+@onready var stack_col = $StackArea/CollisionShape2D
+@onready var hl = $Highlight
+
+#Amount logic
+var sprs = []
+
+var picked = false
+
+var amount := 1 :
+	get: return amount
+	set(value):
+		upt_vis_spr(value)
+		if amount < sprs.size() and value > amount:
+			play_vis_spr(\"spawn\")
+		amount = value
+		
+var stack_queue_request
+
+func play_vis_spr(anim):
+	for s in sprs:
+		if s.visible: s.play(anim)
+
+func upt_vis_spr(amt):
+	amt = clampi(amt, 0, sprs.size())
+	for i in sprs.size():
+		sprs[i].visible = i < amt
+		
+func stack(other):
+	amount += other.amount
+	other.queue_free()
+#######################
+
+func _ready():
+	for child in $SpriteContainer.get_children():
+		if child is AnimatedSprite2D:
+			sprs.append(child)
+	upt_vis_spr(amount)
+	play_vis_spr(\"spawn\")
+
+func pick_up():
+	if picked: return
+	col.set_deferred(\"disabled\", true)
+	stack_col.set_deferred(\"disabled\", true)
+	picked = true
+	play_vis_spr(\"pick_up\")
+
+func drop():
+	if not picked: return
+	col.set_deferred(\"disabled\", false)
+	stack_col.set_deferred(\"disabled\", false)
+	picked = false
+	play_vis_spr(\"idle\")
+
+func set_hl(b : bool):
+	hl.visible = b
+
+func _on_stack_area_area_entered(area):
+	var other = area.get_parent()
+	if other.amount > amount: return
+	if other.amount < amount: 
+		amount += other.amount
+		other.queue_free()
+		return
+	if stack_queue_request:
+		stack_queue_request = null
+		amount += other.amount
+		other.queue_free()
+	else:
+		other.stack_queue_request = self
+"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jrbxr"]
 atlas = ExtResource("1_henmv")
@@ -36,6 +116,22 @@ region = Rect2(768, 0, 128, 128)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("3_elndr")
+}],
+"loop": false,
+"name": &"idle",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_eeyli")
+}],
+"loop": false,
+"name": &"pick_up",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_jrbxr")
 }, {
 "duration": 1.0,
@@ -67,21 +163,68 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rkukd"]
 size = Vector2(49.5, 30.5)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_diibe"]
+radius = 38.0132
+
 [node name="Wood" type="Area2D"]
 collision_layer = 512
 collision_mask = 0
-script = ExtResource("1_w66i6")
+script = SubResource("GDScript_gpkyj")
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Highlight" type="Node2D" parent="."]
+visible = false
+
+[node name="03" type="Sprite2D" parent="Highlight"]
+position = Vector2(-30, -30)
+texture = ExtResource("5_p8k0q")
+
+[node name="04" type="Sprite2D" parent="Highlight"]
+position = Vector2(35, -30)
+texture = ExtResource("6_ayu52")
+
+[node name="05" type="Sprite2D" parent="Highlight"]
+position = Vector2(-30, 12)
+texture = ExtResource("7_udhdr")
+
+[node name="06" type="Sprite2D" parent="Highlight"]
+position = Vector2(35, 12)
+texture = ExtResource("8_7nwnw")
+
+[node name="SpriteContainer" type="Node2D" parent="."]
+
+[node name="S1" type="AnimatedSprite2D" parent="SpriteContainer"]
 position = Vector2(0, -18)
 sprite_frames = SubResource("SpriteFrames_ey05l")
-animation = &"spawn"
-frame = 7
-frame_progress = 1.0
-offset = Vector2(0, -22)
+animation = &"idle"
+offset = Vector2(0, -10)
+
+[node name="S2" type="AnimatedSprite2D" parent="SpriteContainer"]
+visible = false
+position = Vector2(11, -14)
+sprite_frames = SubResource("SpriteFrames_ey05l")
+animation = &"idle"
+offset = Vector2(0, -10)
+
+[node name="S3" type="AnimatedSprite2D" parent="SpriteContainer"]
+visible = false
+position = Vector2(6, -27)
+sprite_frames = SubResource("SpriteFrames_ey05l")
+animation = &"pick_up"
+offset = Vector2(0, -10)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
-position = Vector2(-1, -17)
+position = Vector2(-1, -6)
 shape = SubResource("RectangleShape2D_rkukd")
+
+[node name="StackArea" type="Area2D" parent="."]
+collision_layer = 1024
+collision_mask = 1024
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StackArea"]
+visible = false
+position = Vector2(4, -7)
+shape = SubResource("CircleShape2D_diibe")
+
+[connection signal="area_entered" from="StackArea" to="." method="_on_stack_area_area_entered"]
