@@ -1,4 +1,4 @@
-[gd_scene load_steps=75 format=3 uid="uid://diyro04wwkeql"]
+[gd_scene load_steps=78 format=3 uid="uid://diyro04wwkeql"]
 
 [ext_resource type="Texture2D" uid="uid://b5ql6emxa5pa3" path="res://assets/terrain/ground/tilemap_elevation.png" id="1_5dw0k"]
 [ext_resource type="Texture2D" uid="uid://bap5dr001bpeb" path="res://assets/terrain/ground/tilemap_flat.png" id="2_j600u"]
@@ -14,6 +14,8 @@
 [ext_resource type="Script" path="res://scripts/character/pawn/states/pawn_idle_state.gd" id="12_1roln"]
 [ext_resource type="Script" path="res://scripts/character/pawn/states/pawn_run_state.gd" id="13_6rvqy"]
 [ext_resource type="Script" path="res://scripts/character/pawn/states/pawn_chop_state.gd" id="14_b6jvk"]
+[ext_resource type="Script" path="res://scripts/character/attack_area.gd" id="15_h5qxo"]
+[ext_resource type="Script" path="res://scripts/character/interact_area.gd" id="16_253jx"]
 [ext_resource type="PackedScene" uid="uid://doi2w4w5wmcge" path="res://scenes/resources/tree/tree.tscn" id="16_nn425"]
 [ext_resource type="Script" path="res://scripts/buildings/house/house.gd" id="17_ai4ws"]
 [ext_resource type="Texture2D" uid="uid://d11xf45i4w3ch" path="res://assets/buildings/house/house_construction.png" id="18_6qubx"]
@@ -733,6 +735,9 @@ size = Vector2(122, 52)
 [sub_resource type="CircleShape2D" id="CircleShape2D_uk7uo"]
 radius = 31.0161
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_m6v77"]
+radius = 32.0
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nl67u"]
 size = Vector2(82, 78)
 
@@ -757,6 +762,7 @@ layer_5/tile_data = PackedInt32Array()
 
 [node name="Pawn" type="CharacterBody2D" parent="."]
 position = Vector2(478, 387)
+collision_mask = 6
 script = ExtResource("9_vhw5p")
 metadata/_edit_group_ = true
 
@@ -786,32 +792,45 @@ position = Vector2(0, -2)
 rotation = -1.57079
 shape = SubResource("CapsuleShape2D_i4vwj")
 
-[node name="ChopArea" type="Area2D" parent="Pawn"]
+[node name="AttackArea" type="Area2D" parent="Pawn"]
 visible = false
 collision_layer = 0
 collision_mask = 256
+script = ExtResource("15_h5qxo")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Pawn/ChopArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pawn/AttackArea"]
 position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_57gdh")
 
 [node name="CollectArea" type="Area2D" parent="Pawn"]
-visible = false
 collision_layer = 0
-collision_mask = 512
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pawn/CollectArea"]
 position = Vector2(0, -16)
 shape = SubResource("CircleShape2D_uk7uo")
+
+[node name="InteractArea" type="Area2D" parent="Pawn"]
+collision_layer = 0
+collision_mask = 512
+script = ExtResource("16_253jx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pawn/InteractArea"]
+position = Vector2(0, -16)
+shape = SubResource("CircleShape2D_m6v77")
 
 [node name="CarryContainer" type="Node2D" parent="Pawn"]
 position = Vector2(-2, -48)
 
 [node name="Tree" parent="." instance=ExtResource("16_nn425")]
 position = Vector2(855, 280)
+collision_layer = 4
+collision_mask = 0
 
 [node name="House" type="StaticBody2D" parent="."]
 position = Vector2(650, 288)
+collision_layer = 4
+collision_mask = 0
 script = ExtResource("17_ai4ws")
 metadata/_edit_group_ = true
 
@@ -830,7 +849,6 @@ script = ExtResource("11_bhewf")
 script = ExtResource("19_6c4kr")
 
 [node name="Highlight" type="Node2D" parent="House"]
-visible = false
 
 [node name="03" type="Sprite2D" parent="House/Highlight"]
 position = Vector2(-50, -60)
@@ -866,7 +884,9 @@ position = Vector2(328, 311)
 [node name="PickableResource3" parent="." instance=ExtResource("24_2lobm")]
 position = Vector2(536, 249)
 
-[connection signal="area_entered" from="Pawn/ChopArea" to="Pawn" method="_on_chop_area_area_entered"]
-[connection signal="area_exited" from="Pawn/ChopArea" to="Pawn" method="_on_chop_area_area_exited"]
+[connection signal="area_entered" from="Pawn/AttackArea" to="Pawn/AttackArea" method="_on_area_entered"]
+[connection signal="area_exited" from="Pawn/AttackArea" to="Pawn/AttackArea" method="_on_area_exited"]
 [connection signal="area_entered" from="Pawn/CollectArea" to="Pawn" method="_on_collect_area_area_entered"]
 [connection signal="area_exited" from="Pawn/CollectArea" to="Pawn" method="_on_collect_area_area_exited"]
+[connection signal="area_entered" from="Pawn/InteractArea" to="Pawn/InteractArea" method="_on_area_entered"]
+[connection signal="area_exited" from="Pawn/InteractArea" to="Pawn/InteractArea" method="_on_area_exited"]

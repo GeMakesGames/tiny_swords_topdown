@@ -3,8 +3,15 @@ class_name PickableResource
 
 @onready var col = $CollisionShape2D 
 @onready var stack_col = $StackArea/CollisionShape2D
-@onready var hl = $Highlight
+@onready var hl_container = $Highlight
 @export_enum("Wood", "Gold", "Meat") var type
+
+var hl := false:
+	get: return hl
+	set(value):
+		if value == hl: return
+		hl = value
+		hl_container.visible = value
 
 #Amount logic
 var sprs = []
@@ -16,12 +23,17 @@ var amount := 1 :
 	set(value):
 		upt_vis_spr(value)
 		if amount < sprs.size() and value > amount:
-			play_vis_spr("spawn")
+			play_vis_spr("spawn", amount, value - amount)
 		amount = value
 		
 var stack_queue_request
 
-func play_vis_spr(anim):
+func play_vis_spr(anim, start_index = -1, n = start_index):
+	if start_index != -1:
+		n = clampi(n + start_index, start_index, sprs.size())
+		for i in range(start_index, n):
+			sprs[i].play(anim)
+		return
 	for s in sprs:
 		if s.visible: s.play(anim)
 
@@ -53,10 +65,6 @@ func drop():
 	col.set_deferred("disabled", false)
 	stack_col.set_deferred("disabled", false)
 	picked = false
-	play_vis_spr("idle")
-
-func set_hl(b : bool):
-	hl.visible = b
 
 func _on_stack_area_area_entered(area):
 	var other = area.get_parent()

@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var spr = $AnimatedSprite2D
 @onready var input := InputManager.new()
 @onready var carry_container = $CarryContainer
+@onready var attack_area = $AttackArea
 
 #############################
 # Carrying logic
@@ -11,8 +12,7 @@ var carrying := false:
 	get: return carrying
 	set(value):
 		carrying = value
-		for r in r_in_rng:
-			r.set_hl(not value)
+		attack_area.hl = not value
 			
 var carry_obj :
 	get: return carry_obj
@@ -26,10 +26,10 @@ var carry_target = null :
 	set(value):
 		if carry_target == value: return
 		if carry_target:
-			carry_target.set_hl(false)
+			carry_target.hl = false
 		carry_target = value
 		if value:
-			carry_target.set_hl(true)
+			carry_target.hl = true
 
 func pick_up():
 	if not carry_target: return
@@ -67,8 +67,6 @@ func filter_target_by_carry_obj_type(target):
 const BASE_MAX_SPD = Vector2(90, 90)
 const BASE_ACCEL = 900
 
-var r_in_rng = []
-
 var f_dir := 1 :
 	get: return f_dir
 	set(value):
@@ -78,6 +76,7 @@ var f_dir := 1 :
 		f_dir = value
 
 func _ready():
+	carrying = false
 	fsm.change_state("idle")
 
 func _physics_process(delta : float):
@@ -86,17 +85,6 @@ func _physics_process(delta : float):
 
 func play(anim : String):
 	spr.play(anim)
-
-func _on_chop_area_area_entered(hitbox):
-	var r = hitbox.get_parent()
-	r.set_hl(not carrying)
-	r_in_rng.append(r)
-	
-
-func _on_chop_area_area_exited(hitbox):
-	var r = hitbox.get_parent()
-	r.set_hl(false)
-	r_in_rng.erase(r)
 
 func _on_collect_area_area_entered(collectable):
 	if collectable == carry_target or collectable == carry_obj: return
