@@ -29,6 +29,10 @@ folder_colors={
 "res://scripts/": "red"
 }
 
+[filesystem]
+
+import/blender/enabled=false
+
 [input]
 
 btn_left={
@@ -68,7 +72,7 @@ btn_interact={
 2d_physics/layer_2="ground"
 2d_physics/layer_3="objects"
 2d_physics/layer_9="resources"
-2d_physics/layer_10="carry"
+2d_physics/layer_10="interact"
 2d_physics/layer_11="stack"
 
 [rendering]

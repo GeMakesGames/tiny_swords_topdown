@@ -9,9 +9,10 @@ func physics_update(delta):
 	obj.f_dir = obj.input.x
 	
 	if obj.input.interact:
-		if obj.carry_target:
-			obj.pick_up()
-			enter()
+		if obj.interact_area.has_target():
+			obj.interact()
+			if obj.carrying:
+				enter()
 		elif obj.carrying:
 			obj.drop()
 			enter()

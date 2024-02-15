@@ -5,3 +5,5 @@ extends State
 func enter():
 	obj.spr.texture = destroyed_tex
 
+func interact(interactor):
+	change_state("construction")

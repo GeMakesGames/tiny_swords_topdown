@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var input := InputManager.new()
 @onready var carry_container = $CarryContainer
 @onready var attack_area = $AttackArea
+@onready var interact_area = $InteractArea
 
 #############################
 # Carrying logic
@@ -20,48 +21,28 @@ var carry_obj :
 		carry_obj = value
 		carrying = value != null
 
-var carry_queue = []
-var carry_target = null :
-	get: return carry_target
-	set(value):
-		if carry_target == value: return
-		if carry_target:
-			carry_target.hl = false
-		carry_target = value
-		if value:
-			carry_target.hl = true
-
-func pick_up():
-	if not carry_target: return
+func carry(target):
 	if carry_obj:
-		carry_obj.stack(carry_target)
-		select_next_carry_target(true)
+		carry_obj.stack(target)
+		interact_area.next_target(false)
 		return
 	
-	carry_obj = carry_target
-	select_next_carry_target(true)
+	carry_obj = target
+	interact_area.filter = filter_target_by_carry_obj_type
+	interact_area.next_target(false)
 	carry_obj.reparent(carry_container)
-	carry_obj.pick_up()
 	carry_obj.global_position = carry_container.global_position
 	
+func filter_target_by_carry_obj_type(target):
+	if not target or not "type" in target: return false
+	return target.type == carry_obj.type
+
 func drop():
 	if not carry_obj: return
 	carry_obj.reparent(get_parent())
 	carry_obj.drop()
+	interact_area.filter = null
 	carry_obj = null
-
-func select_next_carry_target(override := false):
-	if override: carry_target = null
-	if not override and carry_target: return
-	if carrying:
-		carry_target = carry_queue.filter(filter_target_by_carry_obj_type).pop_front()
-		if carry_target: carry_queue.erase(carry_target)
-	else:
-		carry_target = carry_queue.pop_front()
-
-func filter_target_by_carry_obj_type(target):
-	return target.type == carry_obj.type
-	
 #############################
 		
 const BASE_MAX_SPD = Vector2(90, 90)
@@ -86,13 +67,6 @@ func _physics_process(delta : float):
 func play(anim : String):
 	spr.play(anim)
 
-func _on_collect_area_area_entered(collectable):
-	if collectable == carry_target or collectable == carry_obj: return
-	carry_queue.append(collectable)
-	select_next_carry_target()
-
-func _on_collect_area_area_exited(collectable):
-	if carry_target == collectable:
-		carry_target = null
-	carry_queue.erase(collectable)
-	select_next_carry_target()
+func interact():
+	if interact_area.has_target():
+		interact_area.target.interact(self)

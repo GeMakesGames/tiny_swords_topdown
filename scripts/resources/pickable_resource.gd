@@ -54,11 +54,12 @@ func _ready():
 	upt_vis_spr(amount)
 	play_vis_spr("spawn")
 
-func pick_up():
+func interact(interactor):
 	if picked: return
 	col.set_deferred("disabled", true)
 	stack_col.set_deferred("disabled", true)
 	picked = true
+	interactor.carry(self)
 
 func drop():
 	if not picked: return

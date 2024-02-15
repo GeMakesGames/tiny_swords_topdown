@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://diyro04wwkeql"]
+[gd_scene load_steps=81 format=3 uid="uid://diyro04wwkeql"]
 
 [ext_resource type="Texture2D" uid="uid://b5ql6emxa5pa3" path="res://assets/terrain/ground/tilemap_elevation.png" id="1_5dw0k"]
 [ext_resource type="Texture2D" uid="uid://bap5dr001bpeb" path="res://assets/terrain/ground/tilemap_flat.png" id="2_j600u"]
@@ -22,10 +22,12 @@
 [ext_resource type="Script" path="res://scripts/buildings/house/states/house_destroyed_state.gd" id="19_6c4kr"]
 [ext_resource type="Texture2D" uid="uid://bmg5qh02np4es" path="res://assets/UI/pointers/03.png" id="20_c8rc5"]
 [ext_resource type="Texture2D" uid="uid://7v5nab3n2g0j" path="res://assets/UI/pointers/04.png" id="21_23pdt"]
+[ext_resource type="Script" path="res://scripts/buildings/house/states/house_construction_state.gd" id="21_dw3ta"]
 [ext_resource type="Texture2D" uid="uid://kpyombutu2ie" path="res://assets/UI/pointers/05.png" id="22_blu68"]
 [ext_resource type="PackedScene" uid="uid://bsb0ek0mble5" path="res://scenes/resources/tree/pickable_wood.tscn" id="23_22ig1"]
 [ext_resource type="Texture2D" uid="uid://bh1n6h7is6oy6" path="res://assets/UI/pointers/06.png" id="23_x058m"]
 [ext_resource type="PackedScene" uid="uid://bc7c8clpmpsfs" path="res://scenes/resources/mine/pickable_gold.tscn" id="24_2lobm"]
+[ext_resource type="Script" path="res://scripts/interact/interactable_area.gd" id="25_osl3w"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tpbys"]
 texture = ExtResource("1_5dw0k")
@@ -741,6 +743,9 @@ radius = 32.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nl67u"]
 size = Vector2(82, 78)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ofkr8"]
+size = Vector2(103, 82)
+
 [node name="TempWorld" type="Node2D"]
 y_sort_enabled = true
 
@@ -848,7 +853,11 @@ script = ExtResource("11_bhewf")
 [node name="Destroyed" type="Node" parent="House/FSM"]
 script = ExtResource("19_6c4kr")
 
+[node name="Construction" type="Node" parent="House/FSM"]
+script = ExtResource("21_dw3ta")
+
 [node name="Highlight" type="Node2D" parent="House"]
+visible = false
 
 [node name="03" type="Sprite2D" parent="House/Highlight"]
 position = Vector2(-50, -60)
@@ -865,6 +874,16 @@ texture = ExtResource("22_blu68")
 [node name="06" type="Sprite2D" parent="House/Highlight"]
 position = Vector2(50, 25)
 texture = ExtResource("23_x058m")
+
+[node name="Area2D" type="Area2D" parent="House" node_paths=PackedStringArray("interactable")]
+collision_layer = 512
+collision_mask = 0
+script = ExtResource("25_osl3w")
+interactable = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="House/Area2D"]
+position = Vector2(0.5, -18)
+shape = SubResource("RectangleShape2D_ofkr8")
 
 [node name="PickableWood" parent="." instance=ExtResource("23_22ig1")]
 position = Vector2(502, 414)
